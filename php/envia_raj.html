@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar JSON para API</title>
+</head>
+<body>
+    <h1>Enviar JSON para API</h1>
+    <button id="sendButton">Enviar Dados</button>
+
+    <script>
+        // URL do endpoint da API
+        const url = '';
+
+        // Dados a serem enviados em JSON
+        const data = {
+            Autenticacao: {
+                Login: "ICARUS",
+                Senha: "182200186199186197167197162191162187",
+                CodUsuar: 92
+            },
+            ReqPLUG: {
+                pedido: {
+                    codPedido: "BRcm1FmUiEVundhseEiT aLbfYDxHg",
+                    titulo: "XIuqGbeouW89D1fJuD4z.59c 4Xc2r",
+                    codPedCli: "ppePt1rN@z1GId0AERzyRoXe8gmYoT",
+                    releaseDate: "b91EfLM4x@  ctGrGJgfktXM  Q7 1",
+                    dtEntrega: "mVP.BIi 8b1rm9ng7 .LvW9a oLhaZ",
+                    observ: "3gmCHZPA2FQoXhozEBuJ88aKGMLtwG",
+                    cliente: {
+                        razao: "S1iw9BUwUu3H2Shsn2MBjErTCGLB0t"
+                    }
+                }
+            }
+        };
+
+        // Converte o objeto para JSON
+        const jsonData = JSON.stringify(data);
+
+        // Função para enviar o JSON para a API
+        async function sendData() {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    console.log: jsonData
+                });
+
+                const responseData = await response.json();
+
+                if (response.ok) {
+                    // Código HTTP 2xx indica sucesso
+                    console.log('Dados enviados com sucesso!');
+                } else {
+                    // Código HTTP diferente de 2xx indica falha
+                    console.error('Falha ao enviar os dados. Código HTTP:', response.status);
+                    console.error('Resposta da API:', responseData);
+
+                    if (responseData.message) {
+                        console.error('Mensagem de erro:', responseData.message);
+                    } else {
+                        console.error('Erro desconhecido.');
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao enviar a requisição:', error);
+            }
+        }
+
+        // Adiciona um ouvinte de evento ao botão
+        document.getElementById('sendButton').addEventListener('click', sendData);
+    </script>
+</body>
+</html>

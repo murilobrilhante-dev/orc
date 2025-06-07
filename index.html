@@ -1,0 +1,4499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17067789987"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17067789987');
+</script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-N95HL6ZB');</script>
+<!-- End Google Tag Manager -->
+
+
+
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Nazapack Wizard para orçamento de produtos">
+	<title>Orçamento Nazapack</title>
+
+	<!-- Favicon -->
+	<link href="img/favicon.png" rel="shortcut icon">
+
+	<!-- Google Fonts - Poppins, Karla -->
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Karla:300,400,500,600,700" rel="stylesheet">
+
+	<!-- Font Awesome CSS -->
+	<link href="vendor/fontawesome/css/all.min.css" rel="stylesheet">
+
+	<!-- Custom Font Icons -->
+	<link href="vendor/icomoon/css/iconfont.min.css" rel="stylesheet">
+
+	<!-- Vendor CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link href="vendor/animate/css/animate.min.css" rel="stylesheet">
+	<link href="vendor/dmenu/css/menu.css" rel="stylesheet">
+	<link href="vendor/hamburgers/css/hamburgers.min.css" rel="stylesheet">
+	<link href="vendor/mmenu/css/mmenu.min.css" rel="stylesheet">
+	<link href="vendor/range-slider/css/ion.rangeSlider.css" rel="stylesheet">
+	<link href="vendor/magnific-popup/css/magnific-popup.css" rel="stylesheet">
+	<link href="vendor/float-labels/css/float-labels.min.css" rel="stylesheet">
+
+	<!-- Main CSS -->
+	<link href="css/style.css" rel="stylesheet">
+
+<!-- Hotjar Tracking Code for https://nazapack.com.br/meu-orcamento/ -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5121773,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+	<script>
+
+		function mascaraCep(input) {
+	var cep = input.value.replace(/\D+/g, ''); // remove todos os caracteres que não são dígitos
+	cep = cep.replace(/^(\d{5})(\d{3})$/, '$1-$2'); // adiciona o hífen após os 5 primeiros dígitos
+	input.value = cep;
+  }
+
+
+
+		// =====================================================
+		//     CNPJA e mask no cnpj
+		// =====================================================
+		function fMasc(objeto, mascara) {
+			obj = objeto
+			masc = mascara
+			setTimeout("fMascEx()", 1)
+		}
+		function fMascEx() {
+			obj.value = masc(obj.value)
+		}
+
+		function mCNPJ(cnpj) {
+			cnpj = cnpj.replace(/\D/g, "")
+			cnpj = cnpj.replace(/^(\d{2})(\d)/, "$1.$2")
+			cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+			cnpj = cnpj.replace(/\.(\d{3})(\d)/, ".$1/$2")
+			cnpj = cnpj.replace(/(\d{4})(\d)/, "$1-$2")
+			return cnpj
+		}
+
+		function validarCNPJ(cnpja, cpf) {
+    // Remove todos os caracteres não numéricos do CNPJ
+    cnpja = cnpja.replace(/\D/g, '');
+
+    // Se o CNPJ está em branco, verifica se o CPF foi preenchido
+    if (cnpja === '' && cpf && cpf.replace(/\D/g, '').length > 0) {
+        return true;
+    }
+
+    // Verifica se o CNPJ tem 14 dígitos
+    if (cnpja.length !== 14) {
+        alert('CNPJ inválido 1.');
+        return false;
+    }
+
+    // Verifica se todos os dígitos são iguais (CNPJ inválido)
+    if (/^(\d)\1+$/.test(cnpja)) {
+        alert('CNPJ inválido 2.');
+        return false;
+    }
+
+    // Validação do primeiro dígito verificador
+    let tamanho = cnpja.length - 2;
+    let numeros = cnpja.substring(0, tamanho);
+    let digitos = cnpja.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+
+    let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+
+    if (resultado != digitos.charAt(0)) {
+        alert('CNPJ inválido 3.');
+        return false;
+    }
+
+    // Validação do segundo dígito verificador
+    tamanho = tamanho + 1;
+    numeros = cnpja.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+
+    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+
+    if (resultado != digitos.charAt(1)) {
+        alert('CNPJ inválido. 4');
+        return false;
+    }
+
+    //alert('CNPJ válido.');
+    return true;
+}
+
+
+		function ConsultCNPJA() {
+			var cnpja = $("#cnpj").val();
+			var cpf = $("#cpf").val();
+			cnpja = cnpja.replace(/\D/g, '');
+
+			validarCNPJ(cnpja, cpf);
+
+			var settings = {
+				"url": "https://api.cnpja.com/office/" + cnpja + "?registrations=BR",
+				"method": "GET",
+				"timeout": 0,
+				"headers": {
+					"Authorization": "95dd156b-5b0c-4275-ab72-f6b69d2fe320-0eec22da-7973-4103-a085-0f0cfa376b6f"
+				}
+			};
+
+			function preencherFormulario(data) {
+				var companyNameInput = document.getElementById('empresa');
+				var cepInput = document.getElementById('cep');
+				var ruaInput = document.getElementById('rua');
+				var bairroInput = document.getElementById('bairro');
+				var cidadeInput = document.getElementById('cidade');
+				var ufInput = document.getElementById('uf');
+				var numEndInput = document.getElementById('numero-end');
+				var emailCompanyInput = document.getElementById('email');
+				var phoneCompanyInput = document.getElementById('telefone');
+				var codCityInput = document.getElementById('codcidade');
+				var IEInput = document.getElementById('ie');
+
+				// Inserir os dados nos campos correspondentes do formulário
+				companyNameInput.value = data.company.name;
+				IEInput.value = data.registrations[0].number;
+				emailCompanyInput = data.emails.address;
+				cepInput.value = data.address.zip;
+				ruaInput.value = data.address.street;
+				bairroInput.value = data.address.district;
+				cidadeInput.value = data.address.city;
+				ufInput.value = data.address.state;
+				numEndInput.value = data.address.number;
+				codCityInput.value = data.address.municipality;				
+				phoneCompanyInput = data.phones.area + data.phones.number;
+
+				mascaraCep(cepInput);
+			}
+
+			$.ajax(settings).done(function (response) {
+				preencherFormulario(response);
+			});
+		}
+	</script>
+
+</head>
+
+<body>
+
+	<!-- Preloader -->
+	<div id="preloader">
+		<div data-loader="circle-side"></div>
+	</div>
+	<!-- Preloader End -->
+
+	<!-- Page -->
+	<div id="page">
+		<!-- Header -->
+		<header class="main-header sticky">
+			<a href="#menu" class="btn-mobile">
+				<div class="hamburger hamburger--spin" id="hamburger">
+					<div class="hamburger-box">
+						<div class="hamburger-inner"></div>
+					</div>
+				</div>
+			</a>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-3 col-6">
+						<div id="logo">
+							<a href="index.html" title="Nazapack"><img src="img/logo.png"></a>
+						</div>
+					</div>
+					<div class="col-lg-9 col-6">
+						<!-- Menu -->
+						<nav id="menu" class="main-menu">
+							<ul>
+								<li><span><a href="index.html">SOBRE</a></span></li>
+								<li>
+									<span><a href="#">SEGMENTOS<i class="fa fa-chevron-down"></i></a></span>
+									<ul>
+										<li><a href="https://nazapack.com.br/copo-de-papel-para-cafe/">CAFÉS</a></li>
+										<li><a href="https://nazapack.com.br/sorveteria/" >SORVETERIAS</a></li>
+										<li><a href="https://nazapack.com.br/hamburgueria/" >HAMBURGUERIA / FOOD TRUCK</a></li>
+										<li><a href="https://nazapack.com.br/padarias/" >PADARIA</a></li>
+										<li><a href="https://nazapack.com.br/corporativo/" >CORPORATIVO</a></li>
+										<li><a href="https://nazapack.com.br/eventos/" >EVENTOS</a></li>
+										<li><a href="https://nazapack.com.br/marketing-promocional/" >MARKETING PROMOCIONAL</a></li>
+									</ul>
+								</li>
+								<li>
+									<span><a href="#">PRODUTOS<i class="fa fa-chevron-down"></i></a></span>
+									<ul>
+									<li><a href="https://nazapack.com.br/copo-de-papel-descartavel/">COPOS</a></li>
+									<li><a href="https://nazapack.com.br/copo-de-papel-premium/">COPOS PREMIUM</a></li>
+									<li><a href="https://nazapack.com.br/tampas-para-copos-descartaveis/">TAMPAS PARA COPOS</a></li>
+									<li><a href="https://nazapack.com.br/acessorios-para-copos-descartaveis/" >ACESSÓRIOS PARA COPOS</a></li>
+									<li><a href="https://nazapack.com.br/potes-de-papel/" >POTES</a></li>
+									<li><a href="https://nazapack.com.br/tampas-potes-de-papel/" >TAMPAS PARA POTES</a></li>
+									<li><a href="https://nazapack.com.br/acessorios-para-pote-descartavel/" >ACESSÓRIOS PARA POTES</a></li>
+								</ul>
+								</li>
+								<li><span><a href="https://nazapack.com.br/meu-orcamento/">ORÇAMENTOS</a></span></li>
+								<li><span><a href="https://nazapack.com.br/contato/">CONTATO</a></span></li>
+							</ul>
+						</nav>
+						<!-- Menu End -->
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- Header End -->
+		<!-- Sub Header -->
+		<div class="sub-header">
+			<div class="container">
+				<h1>Faça seu orçamento</h1>
+			</div>
+		</div>
+		<!-- Sub Header End -->
+		<main>
+			<!-- Order  -->
+			<div class="order">
+				<div class="container">
+					<!-- Form -->
+					<form method="POST" id="orderForm" name="orderForm">
+						<div class="row">
+							<div class="col-lg-8" id="mainContent">
+								<!-- Personal Details -->
+								<div id="personalDetails" class="row contact-box">
+									<div class="contact-box-header">
+										<h3>Por favor preencha os campos abaixo </h3>
+									</div>
+									<div class="col-6 col-sm-6">
+										<label>
+											<input type="radio" class="form-check-input" name="tipoPessoa"
+												value="juridica" checked onclick="mostrarPFJ()"> Jurídica (CNPJ)
+										</label>
+									</div>
+									<div class="col-6 col-sm-6">
+										<label>
+											<input type="radio" class="form-check-input" name="tipoPessoa"
+												value="fisica" onclick="mostrarPFJ()"> Física (CPF)
+										</label>
+									</div>
+									<div id="tipopj" class="row">
+										<div class="col-6 col-sm-6">
+											<div class="form-group">
+												<label for="cnpj">CNPJ</label>
+												<input id="cnpj" class="form-control" name="cnpj" type="text"
+													maxlength="18" onblur="ConsultCNPJA()"
+													onkeydown="javascript: fMasc( this, mCNPJ );"/>
+													<input id="ie" class="form-control" name="ie" type="hidden" />
+											</div>
+										</div>
+										<div class="col-6 col-sm-6">
+											<div class="form-group">
+												<label for="empresa">Razão Social</label>
+												<input id="empresa" class="form-control" name="empresa" type="text"
+													data-parsley-pattern="^[a-zA-Z\s.]+$" />
+											</div>
+										</div>
+									</div>
+								
+								<div class="col-12" id="tipopf" style="display: none;">
+									<div class="form-group" style="width: 100%;">
+										<label for="cpf">CPF</label>
+										<input id="cpf" class="form-control" name="cpf" type="text"
+												maxlength="18" />
+												
+									</div>
+								</div>
+
+									<div class="col-12">
+										<div class="form-group">
+											<label for="nome">Nome</label>
+											<input id="nome" class="form-control" name="nome" type="text"
+												data-parsley-pattern="^[a-zA-Z\s.]+$" />
+										</div>
+									</div>
+									<div class="col-2 col-sm-2">
+										<div class="form-group">
+											<label for="ddd">DDD</label>
+											<input id="ddd" class="form-control" name="ddd" type="text" maxlength="2" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+										</div>
+									</div>
+									<div class="col-4 col-sm-4">
+										<div class="form-group">
+											<label for="phone">Telefone</label>
+											<input id="phone" class="form-control" name="phone" type="text" maxlength="9" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+										</div>
+									</div>
+									<div class="col-6 col-sm-6">
+										<div class="form-group">
+											<label for="email">Email</label>
+											<input id="email" class="form-control" name="email" type="email" required />
+										</div>
+									</div>
+									<div class="col-6 col-sm-6">
+										<div class="form-group">
+											<label for="cep">CEP</label>
+											<input id="cep" class="form-control" name="cep" type="text" oninput="mascaraCep(this)" />
+										</div>
+									</div>
+									<div class="col-4 col-sm-4">
+										<div class="form-group">
+											<label for="cidade">Cidade</label>
+											<input id="cidade" class="form-control" name="cidade" type="text" />
+											<input id="codcidade" name="codcidade" type="hidden" />
+										</div>
+									</div>
+									<div class="col-2 col-sm-2">
+										<div class="form-group">
+											<label for="uf">UF</label>
+											<input id="uf" class="form-control" name="uf" type="text" />
+										</div>
+									</div>
+									<div class="col-6 col-sm-6">
+										<div class="form-group">
+											<label for="rua">Rua</label>
+											<input id="rua" class="form-control" name="rua" type="text" />
+										</div>
+									</div>
+									<div class="col-2 col-sm-2">
+										<div class="form-group">
+											<label for="numero-end">Nº</label>
+											<input id="numero-end" class="form-control" name="numero-end" type="text" />
+										</div>
+									</div>
+									<div class="col-4 col-sm-4">
+										<div class="form-group">
+											<label for="bairro">Bairro</label>
+											<input id="bairro" class="form-control" name="bairro" type="text" />
+										</div>
+									</div>
+								</div>
+								<!-- Personal Details End -->
+
+								<!-- Products Details -->
+								<div id="optionsProduct" class="row select-product-box">
+									<div class="contact-box-header">
+										<h3>SELECIONE OS PRODUTOS ABAIXO</h3>
+									</div>
+									<div class="row">
+										<div class="col-12 col-sm-3 text-left">
+											<input type="checkbox" id="optionCup" class="inp-cbx" name="optionCup" />
+											<label class="cbx" for="optionCup">
+												<span>
+													<svg width="12px" height="10px" viewBox="0 0 12 10">
+														<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+													</svg>
+												</span>
+												Copos
+											</label>
+										</div>
+										<div class="col-12 col-sm-3 text-left">
+											<input type="checkbox" id="optionPot" class="inp-cbx" name="optionPot" />
+											<label class="cbx" for="optionPot">
+												<span>
+													<svg width="12px" height="10px" viewBox="0 0 12 10">
+														<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+													</svg>
+												</span>
+												Potes
+											</label>
+										</div>
+										<div class="col-12 col-sm-3 text-left">
+											<input type="checkbox" id="optionBowls" class="inp-cbx"
+												name="optionBowls" />
+											<label class="cbx" for="optionBowls">
+												<span>
+													<svg width="12px" height="10px" viewBox="0 0 12 10">
+														<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+													</svg>
+												</span>
+												Bowls
+											</label>
+										</div>
+										 <div class="col-12 col-sm-3 text-left">
+											<input type="checkbox" id="optionTampas" class="inp-cbx" name="optionTampas"
+												value="Tampas" />
+											<label class="cbx" for="optionTampas">
+												<span>
+													<svg width="12px" height="10px" viewBox="0 0 12 10">
+														<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+													</svg>
+												</span>
+												Tampas
+											</label>
+										</div>
+									</div>
+
+								</div>
+
+								<!-- Cups Area -->
+								<div id="Cup-options" class="product-option row option-box" style="display: none;">
+
+									<div class="row">
+										<div class="col-md-4 col-sm-4">
+											<img src="img/products/copo_nazapack.png" style="width: 200px;">
+										</div>
+										<div class="col-md-8 col-sm-8">
+											<div class="row">
+												<h2>COPOS</h2>
+
+											</div>
+											<div class="row">
+												<h3>Selecione o tipo e material</h3>
+											</div>
+											<div class="row">
+												<div class="col-6 col-sm-6">
+													<button id="button3" class="btn-tipo"
+														onclick="colorCopos(event, 'branca-copos-inputs','button3')">LINHA
+														BRANCA</button>
+												</div>
+												<div class="col-6 col-sm-6">
+													<button id="button4" class="btn-tipo"
+														onclick="colorCopos(event, 'kraft-copos-inputs','button4')">KRAFT</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12 col-sm-12">
+										<!-- COPOS BRANCOS -->
+										<div class="copos-group" id="branca-copos-inputs" style="display: none;">
+											<!-- INICIO DOS ITENS -->
+											<div class="itens">
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item1-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp50" />
+															<label class="cbx" for="item1-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 50ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item1-personalizado"
+																class="inp-cbx personalizarProd" value="00330005104">
+															<label class="cbx" for="item1-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item1-id" value="00330005102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item1-quantidade"
+																class="form-select form-select-lg">
+																<option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>																
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item2-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp100" />
+															<label class="cbx" for="item2-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 100ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item2-personalizado"
+																class="inp-cbx personalizarProd" value="00330010104">
+															<label class="cbx" for="item2-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item2-id" value="00330010102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item2-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>																
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item3-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp180" />
+															<label class="cbx" for="item3-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 180ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item3-personalizado"
+																class="inp-cbx personalizarProd" value="00330018104" >
+															<label class="cbx" for="item3-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item3-id" value="00330018102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item3-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>																
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item4-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp240300" />
+															<label class="cbx" for="item4-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 240ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item4-personalizado"
+																class="inp-cbx personalizarProd" value="00330024104" >
+															<label class="cbx" for="item4-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item4-id" value="00330024102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item4-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="4500">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7500">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item5-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp240300" />
+															<label class="cbx" for="item5-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 300ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item5-personalizado"
+																class="inp-cbx personalizarProd" value="00330030104" >
+															<label class="cbx" for="item5-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item5-id" value="00330030102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item5-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="4500">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7500">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item6-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp380" />
+															<label class="cbx" for="item6-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 380ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item6-personalizado"
+																class="inp-cbx personalizarProd" value="00330038104" >
+															<label class="cbx" for="item6-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item6-id" value="00330038102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item6-quantidade"
+																class="form-select form-select-lg">
+																<option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="10000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+<!--
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item7-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp380" />
+															<label class="cbx" for="item7-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 380ml PD
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item7-personalizado"
+																class="inp-cbx personalizarProd" value="0000330187" >
+															<label class="cbx" for="item7-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item7-id" value="0000330107" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item7-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="10000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+-->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item8-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp440" />
+															<label class="cbx" for="item8-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 440ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item8-personalizado"
+																class="inp-cbx personalizarProd" value="00330044104" >
+															<label class="cbx" for="item8-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="item8-id" value="00330044102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item8-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="10000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item9-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp500" />
+															<label class="cbx" for="item9-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 500ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item9-personalizado"
+																class="inp-cbx personalizarProd" value="00330050104" >
+															<label class="cbx" for="item9-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="item9-id" value="00330050102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item9-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="10000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item10-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp700" />
+															<label class="cbx" for="item10-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 700ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item10-personalizado"
+																class="inp-cbx personalizarProd" value="00330070104" >
+															<label class="cbx" for="item10-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="item10-id" value="00330070102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item10-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="600">600</option>
+																<option value="1200">1.200</option>
+																<option value="1800">1.800</option>
+																<option value="2400">2.400</option>
+																<option value="3000">3.000</option>
+																<option value="6000">3.600</option>
+																<option value="9000">4.200</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item11-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp1000" />
+															<label class="cbx" for="item11-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo 1.000ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item11-personalizado"
+																class="inp-cbx personalizarProd" value="00330100104" >
+															<label class="cbx" for="item11-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="item11-id" value="00330100102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item11-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="600">600</option>
+																<option value="1200">1.200</option>
+																<option value="1800">1.800</option>
+																<option value="2400">2.400</option>
+																<option value="3000">3.000</option>
+																<option value="6000">3.600</option>
+																<option value="9000">4.200</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<!-- COPOS KRAFT -->
+										<div class="copos-group" id="kraft-copos-inputs" style="display: none;">
+											<div class="itens">
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item12-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp50" />
+															<label class="cbx" for="item12-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 50ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item12-personalizado"
+																class="inp-cbx personalizarProd" value="00330005107" >
+															<label class="cbx" for="item12-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item12-id" value="00330005106" />
+														</div>
+													</div>
+
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item12-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>																
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item13-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp100" />
+															<label class="cbx" for="item13-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 100ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item13-personalizado"
+																class="inp-cbx personalizarProd" value="00330010107" >
+															<label class="cbx" for="item13-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item13-id" value="00330010106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item13-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item14-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp180" />
+															<label class="cbx" for="item14-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 180ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item14-personalizado"
+																class="inp-cbx personalizarProd" value="00330018107" >
+															<label class="cbx" for="item14-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item14-id" value="00330018106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item14-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item15-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp240300" />
+															<label class="cbx" for="item15-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 240ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item15-personalizado"
+																class="inp-cbx personalizarProd" value="00330024107" >
+															<label class="cbx" for="item15-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item15-id" value="00330024106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item15-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="4500">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7500">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item20-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp240300" />
+															<label class="cbx" for="item20-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 300ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item20-personalizado"
+																class="inp-cbx personalizarProd" value="00330030107" >
+															<label class="cbx" for="item20-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item20-id" value="00330030106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item15-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="4500">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7500">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item16-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp380" />
+															<label class="cbx" for="item16-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 380ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item16-personalizado"
+																class="inp-cbx personalizarProd" value="00330038107" >
+															<label class="cbx" for="item16-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item16-id" value="00330038106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item16-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="10000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item17-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp380" />
+															<label class="cbx" for="item17-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 440ml 
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item17-personalizado"
+																class="inp-cbx personalizarProd" value="00330044107" >
+															<label class="cbx" for="item17-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item17-id" value="00330044106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item17-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="10000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item21-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp500" />
+															<label class="cbx" for="item21-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 500ml 
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item21-personalizado"
+																class="inp-cbx personalizarProd" value="00330050107" >
+															<label class="cbx" for="item21-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item21-id" value="00330050106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item21-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="10000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-md-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item18-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp700" />
+															<label class="cbx" for="item18-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 700ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item18-personalizado"
+																class="inp-cbx personalizarProd" value="00330070107" >
+															<label class="cbx" for="item18-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item18-id" value="00330070106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item18-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="600">600</option>
+																<option value="1200">1.200</option>
+																<option value="1800">1.800</option>
+																<option value="2400">2.400</option>
+																<option value="3000">3.000</option>
+																<option value="6000">3.600</option>
+																<option value="9000">4.200</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="item19-checkbox"
+																class="inp-cbx item-checkbox" data-item="cp1000" />
+															<label class="cbx" for="item19-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Copo Kraft 1.000ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="item19-personalizado"
+																class="inp-cbx personalizarProd" value="00330100107" >
+															<label class="cbx" for="item19-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="item19-id" value="00330100106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="item19-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="600">600</option>
+																<option value="1200">1.200</option>
+																<option value="1800">1.800</option>
+																<option value="2400">2.400</option>
+																<option value="3000">3.000</option>
+																<option value="6000">3.600</option>
+																<option value="9000">4.200</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div><!--FINAL ITENS-->
+									</div>
+								</div>
+
+								<!-- Potes Area -->
+								<div id="Pot-options" class="product-option row option-box" style="display: none;">
+									<div class="row">
+										<div class="col-md-4 col-sm-4">
+											<img src="img/products/pote_nazapack.png" style="width: 200px;">
+										</div>
+										<div class="col-md-8 col-sm-8">
+											<div class="row">
+												<h2>POTES</h2>
+											</div>
+											<div class="row">
+												<h3>Selecione o tipo e material</h3>
+											</div>
+											<div class="row">
+												<div class="col-6 col-sm-6">
+													<button id="button1" class="btn-tipo"
+														onclick="colorPotes(event, 'potes-branco','button1')">LINHA
+														BRANCA</button>
+												</div>
+												<div class="col-6 col-sm-6">
+													<button id="button2" class="btn-tipo"
+														onclick="colorPotes(event,'potes-kraft','button2')">KRAFT</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12 col-sm-12">
+
+										<!-- Potes BRANCOS -->
+										<div class="potes-group" id="potes-branco" style="display: none;">
+											<!-- INICIO DOS ITENS -->
+											<div class="itens">
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT50-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-50" />
+															<label class="cbx" for="PT50-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Pote 50ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PT50-personalizado"
+																class="inp-cbx personalizarProd" value="00330005104" >
+															<label class="cbx" for="PT50-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM</label>
+															<input type="hidden" id="PT50-id" value="00330005102" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PT50-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>																
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT80-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-80" />
+															<label class="cbx" for="PT80-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Pote 80ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PT80-personalizado"
+																class="inp-cbx personalizarProd" value="00330008204" >
+															<label class="cbx" for="PT80-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PT80-id" value="00330008202" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PT80-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+
+												</div>
+												<!-- PT120 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT120-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-120" />
+															<label class="cbx" for="PT120-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Pote 120ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+
+															<input type="checkbox" id="PT120-personalizado"
+																class="inp-cbx personalizarProd" value="00330012204" >
+															<label class="cbx" for="PT120-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PT120-id" value="00330012202" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PT120-quantidade"
+																class="form-select form-select-lg wide">
+																<option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- PT160 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT160-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-160" />
+															<label class="cbx" for="PT160-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Pote 160ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<input type="checkbox" id="PT160-personalizado"
+																class="inp-cbx personalizarProd" value="00330016204" >
+															<label class="cbx" for="PT160-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PT160-id" value="00330016202" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<select id="PT160-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="4500">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7500">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												<!-- PT220 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT220-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-220" />
+															<label class="cbx" for="PT220-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Pote 220ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PT220-personalizado"
+																class="inp-cbx personalizarProd" value="00330022204" >
+															<label class="cbx" for="PT220-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PT220-id" value="00330022202" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PT220-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- PT280 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT280-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-280" />
+															<label class="cbx" for="PT280-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Pote 280ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PT280-personalizado"
+																class="inp-cbx personalizarProd" value="00330028204" >
+															<label class="cbx" for="PT280-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PT280-id" value="00330028202" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PT280-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="900">900</option>
+																<option value="1800">1.800</option>
+																<option value="2700">2.700</option>
+																<option value="3600">3.600</option>
+																<option value="4500">4.500</option>
+																<option value="5400">5.400</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- PT300 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT300-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-300" />
+															<label class="cbx" for="PT300-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Pote 300ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PT300-personalizado"
+																class="inp-cbx personalizarProd" value="00330030204" >
+															<label class="cbx" for="PT300-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PT300-id" value="00330030202" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PT300-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- PT350 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT350-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-350" />
+															<label class="cbx" for="PT350-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Pote 350ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PT350-personalizado"
+																class="inp-cbx personalizarProd" value="00330035204" >
+															<label class="cbx" for="PT350-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PT350-id" value="00330035202" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PT350-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="800">800</option>
+																<option value="1600">1.600</option>
+																<option value="2400">2.400</option>
+																<option value="3200">3.200</option>
+																<option value="4000">4.000</option>
+																<option value="4800">4.800</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- PT550 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT550-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-550" />
+															<label class="cbx" for="PT550-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Pote 550ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PT550-personalizado"
+																class="inp-cbx personalizarProd" value="00330055204" >
+															<label class="cbx" for="PT550-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewbox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PT550-id" value="00330055202" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PT550-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="600">600</option>
+																<option value="1200">1.200</option>
+																<option value="1800">1.800</option>
+																<option value="2400">2.400</option>
+																<option value="3000">3.000</option>
+																<option value="3600">3.600</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<!-- Potes kraft -->
+										<div class="potes-group" id="potes-kraft" style="display: none;">
+											<!-- INICIO DOS ITENS -->
+											<div class="itens">												
+												<!-- POTE KRAFT 50 ML -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PTK50-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-50" />
+															<label class="cbx" for="PTK50-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																POTE KRAFT 50 ML
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PTK50-personalizado"
+																class="inp-cbx personalizarProd" value="00330005107" >
+															<label class="cbx" for="PTK50-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PTK50-id" value="00330005106" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PTK50-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<!-- POTE KRAFT 080 ML -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PTK80-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-80" />
+															<label class="cbx" for="PTK80-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																POTE KRAFT 80 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PTK80-personalizado"
+																class="inp-cbx personalizarProd" value="00330008206" >
+															<label class="cbx" for="PTK80-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PTK80-id" value="00330008207" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PTK80-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- POTE KRAFT 120 ml -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PTK120-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-120" />
+															<label class="cbx" for="PTK120-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																POTE KRAFT 120 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PTK120-personalizado"
+																class="inp-cbx personalizarProd" value="00330012207" >
+															<label class="cbx" for="PTK120-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PTK120-id" value="00330012206" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PTK120-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- POTE KRAFT 160 ml -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PTK160-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-160" />
+															<label class="cbx" for="PTK160-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																POTE KRAFT 160 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PTK160-personalizado"
+																class="inp-cbx personalizarProd" value="00330016207" >
+															<label class="cbx" for="PTK160-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PTK160-id" value="00330016206" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PTK160-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="4500">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7500">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- POTE KRAFT 220 ml -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PTK220-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-220" />
+															<label class="cbx" for="PTK220-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																POTE KRAFT 220 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PTK220-personalizado"
+																class="inp-cbx personalizarProd" value="00330022207" >
+															<label class="cbx" for="PTK220-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PTK220-id" value="00330022206" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PTK220-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- POTE KRAFT 280 ml -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PTK280-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-280" />
+															<label class="cbx" for="PTK280-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																POTE KRAFT 280 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PTK280-personalizado"
+																class="inp-cbx personalizarProd" value="00330028207" >
+															<label class="cbx" for="PTK280-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PTK280-id" value="00330028206" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PTK280-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="900">900</option>
+																<option value="1800">1.800</option>
+																<option value="2700">2.700</option>
+																<option value="3600">3.600</option>
+																<option value="4500">4.500</option>
+																<option value="5400">5.400</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- POTE KRAFT 300 ml -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PTK300-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-300" />
+															<label class="cbx" for="PTK300-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																POTE KRAFT 300 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PTK300-personalizado"
+																class="inp-cbx personalizarProd" value="00330030207" >
+															<label class="cbx" for="PTK300-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PTK300-id" value="00330030206" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PTK300-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- POTE KRAFT 350 ml -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PTK350-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-350" />
+															<label class="cbx" for="PTK350-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																POTE KRAFT 350 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PTK350-personalizado"
+																class="inp-cbx personalizarProd" value="00330035207" >
+															<label class="cbx" for="PTK350-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PTK350-id" value="00330035206" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PTK350-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="800">800</option>
+																<option value="1600">1.600</option>
+																<option value="2400">2.400</option>
+																<option value="3200">3.200</option>
+																<option value="4000">4.000</option>
+																<option value="4800">4.800</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- POTE KRAFT 550 ml -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PTK550-checkbox"
+																class="inp-cbx item-checkbox" data-item="pt-550" />
+															<label class="cbx" for="PTK550-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																POTE KRAFT 550 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="PTK550-personalizado"
+																class="inp-cbx personalizarProd" value="00330055207" >
+															<label class="cbx" for="PTK550-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="PTK550-id" value="00330055206" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="PTK550-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="600">600</option>
+																<option value="1200">1.200</option>
+																<option value="1800">1.800</option>
+																<option value="2400">2.400</option>
+																<option value="3000">3.000</option>
+																<option value="3600">3.600</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Bowls Area -->
+								<div id="Bowls-options" class="product-option row option-box" style="display: none;">
+									<div class="row">
+										<div class="col-md-4 col-sm-4">
+											<img src="img/products/bowl_nazapack.png" style="width: 200px;">
+										</div>
+										<div class="col-md-8 col-sm-8">
+											<div class="row">
+												<h2>BOWLS</h2>
+											</div>
+											<div class="row">
+												<h3>Selecione o tipo e material</h3>
+											</div>
+											<div class="row">
+												<div class="col-6 col-sm-6">
+													<button id="button5" class="btn-tipo"
+														onclick="colorBowls(event, 'bowls-branco','button5')">LINHA
+														BRANCA</button>
+												</div>
+												<div class="col-6 col-sm-6">
+													<button id="button6" class="btn-tipo"
+														onclick="colorBowls(event, 'bowls-kraft','button6')">KRAFT</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12 col-sm-12">
+										<!-- BOWLS BRANCOS -->
+										<div class="bowls-group" id="bowls-branco" style="display: none;">
+											<!-- INICIO DOS ITENS -->
+											<div class="itens">
+												<!-- BWL750 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BWL750-checkbox"
+																class="inp-cbx item-checkbox" data-item="bw-750950" />
+															<label class="cbx" for="BWL750-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Bowl 750ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="BWL750-personalizado"
+																class="inp-cbx personalizarProd" value="00331075004">
+															<label class="cbx" for="BWL750-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="BWL750-id" value="00331075002" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="BWL750-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="450">450</option>
+																<option value="900">900</option>
+																<option value="1350">1.350</option>
+																<option value="1800">1.800</option>
+																<option value="2250">2.250</option>
+																<option value="2700">2.700</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- BWL950 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BWL950-checkbox"
+																class="inp-cbx item-checkbox" data-item="bw-750950" />
+															<label class="cbx" for="BWL950-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Bowl 950ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="BWL950-personalizado"
+																class="inp-cbx personalizarProd" value="00331095004">
+															<label class="cbx" for="BWL950-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="BWL950-id" value="00331095002" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="BWL950-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="450">450</option>
+																<option value="900">900</option>
+																<option value="1350">1.350</option>
+																<option value="1800">1.800</option>
+																<option value="2250">2.250</option>
+																<option value="2700">2.700</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												<!-- BWL1250 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BWL1250-checkbox"
+																class="inp-cbx item-checkbox" data-item="bw-1250" />
+															<label class="cbx" for="BWL1250-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																Bowl 1.250ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="BWL1250-personalizado"
+																class="inp-cbx personalizarProd" value="00331125004">
+															<label class="cbx" for="BWL1250-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="BWL1250-id" value="00331125002" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="BWL1250-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="270">270</option>
+																<option value="540">540</option>
+																<option value="810">810</option>
+																<option value="1080">1.080</option>
+																<option value="1350">1.350</option>
+																<option value="1620">1.620</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<!-- Bowls kraft -->
+										<div class="bowls-group" id="bowls-kraft" style="display: none;">
+											<!-- INICIO DOS ITENS -->
+											<div class="itens">
+												<!-- BWLK750 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BWLK750-checkbox"
+																class="inp-cbx item-checkbox" data-item="bw-750950" />
+															<label class="cbx" for="BWLK750-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																BOWL KRAFT 750 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="BWLK750-personalizado"
+																class="inp-cbx personalizarProd" value="00331075007">
+															<label class="cbx" for="BWLK750-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="BWLK750-id" value="00331075006" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="BWLK750-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="450">450</option>
+																<option value="900">900</option>
+																<option value="1350">1.350</option>
+																<option value="1800">1.800</option>
+																<option value="2250">2.250</option>
+																<option value="2700">2.700</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- BWLK950 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BWLK950-checkbox"
+																class="inp-cbx item-checkbox" data-item="bw-750950" />
+															<label class="cbx" for="BWLK950-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																BOWL KRAFT 950 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="BWLK950-personalizado"
+																class="inp-cbx personalizarProd" value="00331095007" >
+															<label class="cbx" for="BWLK950-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="BWLK950-id" value="00331095006" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="BWLK950-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="450">450</option>
+																<option value="900">900</option>
+																<option value="1350">1.350</option>
+																<option value="1800">1.800</option>
+																<option value="2250">2.250</option>
+																<option value="2700">2.700</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<!-- BWLK1250 -->
+												<div class="row rowItens">
+													<div class="col-5 col-sm-5">
+														<div class="row">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BWLK1250-checkbox"
+																class="inp-cbx item-checkbox" data-item="bw-1250" />
+															<label class="cbx" for="BWLK1250-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>
+																BOWL KRAFT 1250 ml
+															</label>
+														</div>
+													</div>
+													<div class="col-3 col-sm-3">
+														<div class="row">Impressão</div>
+														<div class="row">
+															<input type="checkbox" id="BWLK1250-personalizado"
+																class="inp-cbx personalizarProd" value="00331125007">
+															<label class="cbx" for="BWLK1250-personalizado">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1">
+																		</polyline>
+																	</svg>
+																</span>SIM
+															</label>
+															<input type="hidden" id="BWLK1250-id" value="00331125006" data-original-value="00331125006" />
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row">Quantidade</div>
+														<div class="row">
+															<select id="BWLK1250-quantidade"
+																class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="270">270</option>
+																<option value="540">540</option>
+																<option value="810">810</option>
+																<option value="1080">1.080</option>
+																<option value="1350">1.350</option>
+																<option value="1620">1.620</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Final Bowls  -->
+								<!-- Tampas Area -->
+								<div id="Tampas-options" class="product-option row option-box" style="display: none;">
+									<div class="row">
+										<div class="col-md-12 col-sm-12">
+											<div class="row">
+												<h2>Escolha sua tampa</h2>
+											</div>
+											<div class="row">
+												<div class="col-6 col-sm-6">
+													<button id="mostrarTampasBtn" class="btn-tipo">TAMPAS DO ORÇAMENTO</button>
+												</div>
+												<div class="col-6 col-sm-6">
+													<button id="mostrarTodasTampasBtn" class="btn-tipo">TODAS AS TAMPAS</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12 col-sm-12">
+										<div class="tampas-group">
+											<!-- INICIO DOS ITENS DOS ACESSORIOS -->
+											<div class="acessorios">
+												<div class="row rowItens item-tampa hidden" data-item="cp50">
+													<input type="hidden" id="item1-id" value="00332005002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/5_tampa_copo_nazapack.png"
+															alt="TAMPA CP50 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="CP50PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="CP50PET" />
+															<label class="cbx" for="CP50PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA CP50 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="CP50PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="cp100">
+													<input type="hidden" id="item1-id" value="00332010002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/5_tampa_copo_nazapack.png"
+															alt="TAMPA CP100 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="CP100PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="CP100PET" />
+															<label class="cbx" for="CP100PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA CP100 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="CP100PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="cp100">
+													<input type="hidden" id="item1-id" value="00332010005" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-cp-bico-branca-ps.png"
+															alt="TAMPA BICO CP100 PS BRANCO" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BICOCP100PSBRANCO-checkbox"
+																class="inp-cbx item-checkbox" data-item="BICOCP100PSBRANCO" />
+															<label class="cbx" for="BICOCP100PSBRANCO-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BICO CP100 PS BRANCO
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BICOCP100PSBRANCO-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp100">
+													<input type="hidden" id="item2-id" value="00332010006" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-ps-bico-preta.png"
+															alt="TAMPA BICO CP100 PS PRETO" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row" style="padding-top: 20px;">
+															<input type="checkbox" id="BICOCP100PSPRETO-checkbox"
+																class="inp-cbx item-checkbox" data-item="BICOCP100PSPRETO" />
+															<label class="cbx" for="BICOCP100PSPRETO-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BICO CP100 PS PRETO
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BICOCP100PSPRETO-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp180">
+													<input type="hidden" id="item3-id" value="00332018005" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-cp-bico-branca-ps.png"
+															alt="TAMPA BICO CP180 PS BRANCO" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BICOCP180PSBRANCO-checkbox"
+																class="inp-cbx item-checkbox" data-item="BICOCP180PSBRANCO" />
+															<label class="cbx" for="BICOCP180PSBRANCO-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BICO CP180 PS BRANCO
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BICOCP180PSBRANCO-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp180">
+													<input type="hidden" id="item4-id" value="00332018006" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-ps-bico-preta.png"
+															alt="TAMPA BICO CP180 PS PRETO" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BICOCP180PSPRETO-checkbox"
+																class="inp-cbx item-checkbox" data-item="BICOCP180PSPRETO" />
+															<label class="cbx" for="BICOCP180PSPRETO-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BICO CP180 PS PRETO
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BICOCP180PSPRETO-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp240300">
+													<input type="hidden" id="item5-id" value="00332024005" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-cp-bico-branca-ps.png"
+															alt="TAMPA BICO CP240/300 PS BRANCO" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BICOCP240300PSBRANCO-checkbox"
+																class="inp-cbx item-checkbox" data-item="BICOCP240300PSBRANCO" />
+															<label class="cbx" for="BICOCP240300PSBRANCO-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BICO CP240/300 PS BRANCO
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BICOCP240300PSBRANCO-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="3000">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7000">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp240300">
+													<input type="hidden" id="item6-id" value="00332024006" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-ps-bico-preta.png"
+															alt="TAMPA BICO CP240/300 PS PRETO" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BICOCP240300PSPRETO-checkbox"
+																class="inp-cbx item-checkbox" data-item="BICOCP240300PSPRETO" />
+															<label class="cbx" for="BICOCP240300PSPRETO-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BICO CP240/300 PS PRETO
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BICOCP240300PSPRETO-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="3000">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7000">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp240300">
+													<input type="hidden" id="item1-id" value="00332024001" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampacanudopet.png"
+															alt="TAMPA CANUDO CP240/300 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="CANUDOCP240300PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="CANUDOCP240300PET" />
+															<label class="cbx" for="CANUDOCP240300PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA CANUDO CP240/300 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="CANUDOCP240300PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="3000">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7000">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="cp380">
+													<input type="hidden" id="item7-id" value="00332038005" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-cp-bico-branca-ps.png"
+															alt="TAMPA BICO CP380 PS BRANCO" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BICOCP380PSBRANCO-checkbox"
+																class="inp-cbx item-checkbox" data-item="BICOCP380PSBRANCO" />
+															<label class="cbx" for="BICOCP380PSBRANCO-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BICO CP380 PS BRANCO
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BICOCP380PSBRANCO-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+																								
+												<div class="row rowItens item-tampa hidden" data-item="cp380">
+													<input type="hidden" id="item1-id" value="00332038006" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-ps-bico-preta.png"
+															alt="TAMPA BICO CP380 PS PRETO" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BICOCP380PSPRETO-checkbox"
+																class="inp-cbx item-checkbox" data-item="BICOCP380PSPRETO" />
+															<label class="cbx" for="BICOCP380PSPRETO-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BICO CP380 PS PRETO
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BICOCP380PSPRETO-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp440">
+													<input type="hidden" id="item1-id" value="00332044001" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampacanudopet.png"
+															alt="TAMPA CANUDO CP440 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="CANUDOCP440PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="CANUDOCP440PET" />
+															<label class="cbx" for="CANUDOCP440PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA CANUDO CP440 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="CANUDOCP440PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="cp500">
+													<input type="hidden" id="item1-id" value="00332044001" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampacanudopet.png"
+															alt="TAMPA CANUDO CP500 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="CANUDOCP500PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="CANUDOCP500PET" />
+															<label class="cbx" for="CANUDOCP500PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA CANUDO CP500 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="CANUDOCP500PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>											
+												
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp440">
+													<input type="hidden" id="item1-id" value="00332044003" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pet-milk-shake.png"
+															alt="TAMPA MK CP440 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="MKCP440PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="MKCP440PET" />
+															<label class="cbx" for="MKCP440PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA MK CP440 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="MKCP440PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp500">
+													<input type="hidden" id="item1-id" value="00332044003" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pet-milk-shake.png"
+															alt="TAMPA MK CP500 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="MKCP500PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="MKCP500PET" />
+															<label class="cbx" for="MKCP500PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA MK CP500 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="MKCP500PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>												
+												
+												<div class="row rowItens item-tampa hidden" data-item="cp700">
+													<input type="hidden" id="item1-id" value="00332070001" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/5_tampa_copo_nazapack.png"
+														alt="TAMPA CP700 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="CP700PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="CP700PET" />
+															<label class="cbx" for="CP700PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA CP700 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="CP700PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="cp1000">
+													<input type="hidden" id="item1-id" value="00332070001" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/5_tampa_copo_nazapack.png"
+														alt="TAMPA CP1000 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="CP1000PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="CP700PET" />
+															<label class="cbx" for="CP1000PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA CP1000 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="CP1000PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>									
+												
+												<div class="row rowItens item-tampa hidden" data-item="pt-50">
+													<input type="hidden" id="item1-id" value="00332005002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/5_tampa_copo_nazapack.png"
+															alt="TAMPA PT50 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT50PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="PT50PET" />
+															<label class="cbx" for="PT50PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA PT50 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="CP50PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												
+												<div class="row rowItens item-tampa hidden" data-item="pt-80">
+													<input type="hidden" id="item1-id" value="00332008002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pt-pet.png"
+															alt="TAMPA PT080 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT080PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="PT080PET" />
+															<label class="cbx" for="PT080PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA PT80 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="PT080PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="pt-120">
+													<input type="hidden" id="item1-id" value="00332012002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pt-pet.png"
+															alt="TAMPA PT120 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT120PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="PT120PET" />
+															<label class="cbx" for="PT120PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA PT120 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="PT120PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="2000">2.000</option>
+																<option value="4000">4.000</option>
+																<option value="6000">6.000</option>
+																<option value="8000">8.000</option>
+																<option value="10000">10.000</option>
+																<option value="12000">12.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="pt-160">
+													<input type="hidden" id="item1-id" value="00332016002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pt-pet.png"
+															alt="TAMPA PT160 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT160PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="PT160PET" />
+															<label class="cbx" for="PT160PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA PT160 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="PT160PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1500">1.500</option>
+																<option value="3000">3.000</option>
+																<option value="4500">4.500</option>
+																<option value="6000">6.000</option>
+																<option value="7500">7.500</option>
+																<option value="9000">9.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="pt-220">
+													<input type="hidden" id="item1-id" value="00332022002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pt-pet.png"
+															alt="TAMPA PT220 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT220PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="PT220PET" />
+															<label class="cbx" for="PT220PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA PT220 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="PT220PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="pt-280">
+													<input type="hidden" id="item1-id" value="00332028002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pt-pet.png"
+															alt="TAMPA PT280 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT280PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="PT280PET" />
+															<label class="cbx" for="PT280PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA PT280 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="PT280PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="900">900</option>
+																<option value="1800">1.800</option>
+																<option value="2700">2.700</option>
+																<option value="3600">3.600</option>
+																<option value="4500">4.500</option>
+																<option value="5400">5.400</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="pt-300">
+													<input type="hidden" id="item1-id" value="00332030002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pt-pet.png"
+															alt="TAMPA PT300 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT300PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="PT300PET" />
+															<label class="cbx" for="PT300PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA PT300 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="PT300PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="cp300">
+													<input type="hidden" id="item1-id" value="00332030003" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pet-milk-shake.png"
+															alt="TAMPA MK PT300 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="MKPT300PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="MKPT300PET" />
+															<label class="cbx" for="MKPT300PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA MK PT300 - PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="MKCP440PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="1000">1.000</option>
+																<option value="2000">2.000</option>
+																<option value="3000">3.000</option>
+																<option value="4000">4.000</option>
+																<option value="5000">5.000</option>
+																<option value="6000">6.000</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+																								
+												<div class="row rowItens item-tampa hidden" data-item="pt-350">
+													<input type="hidden" id="item1-id" value="00332035002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pt-pet.png"
+															alt="TAMPA PT350 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT350PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="PT350PET" />
+															<label class="cbx" for="PT350PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA PT350 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="PT350PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="800">800</option>
+																<option value="1600">1.600</option>
+																<option value="2400">2.400</option>
+																<option value="3200">3.200</option>
+																<option value="4000">4.000</option>
+																<option value="4800">4.800</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row rowItens item-tampa hidden" data-item="pt-550">
+													<input type="hidden" id="item1-id" value="00332055002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-pt-pet.png"
+															alt="TAMPA PT550 PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="PT550PET-checkbox"
+																class="inp-cbx item-checkbox" data-item="PT550PET" />
+															<label class="cbx" for="PT550PET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA PT550 PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="PT550PET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="600">600</option>
+																<option value="1200">1.200</option>
+																<option value="1800">1.800</option>
+																<option value="2400">2.400</option>
+																<option value="3000">3.000</option>
+																<option value="3600">3.600</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="bw-750950">
+													<input type="hidden" id="item1-id" value="00332075002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-bowls-pet.png"
+															alt="TAMPA BOWL 750 ml PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BOWL750MLPET-checkbox"
+																class="inp-cbx item-checkbox" data-item="BOWL750MLPET" />
+															<label class="cbx" for="BOWL750MLPET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BOWL 750 ml PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BOWL750MLPET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="450">450</option>
+																<option value="900">900</option>
+																<option value="1350">1.350</option>
+																<option value="1800">1.800</option>
+																<option value="2250">2.250</option>
+																<option value="2700">2.700</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="bw-750950">
+													<input type="hidden" id="item1-id" value="00332095002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-bowls-pet.png"
+															alt="TAMPA BOWL 950 ml PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BOWL750950MLPET-checkbox"
+																class="inp-cbx item-checkbox" data-item="BOWL750950MLPET" />
+															<label class="cbx" for="BOWL750950MLPET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BOWL 950 ml PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BOWL950MLPET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="450">450</option>
+																<option value="900">900</option>
+																<option value="1350">1.350</option>
+																<option value="1800">1.800</option>
+																<option value="2250">2.250</option>
+																<option value="2700">2.700</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+												<div class="row rowItens item-tampa hidden" data-item="bw-1250">
+													<input type="hidden" id="item1-id" value="00332125002" />
+													<div class="col-md-3 col-sm-3">
+														<img src="img/acessorios/tampa-bowls-pet.png"
+															alt="TAMPA BOWL 1250 ML PET" width="100%">
+													</div>
+													<div class="col-5 col-sm-5">
+														<div class="row" style="padding-top: 20px;">Volumetria</div>
+														<div class="row">
+															<input type="checkbox" id="BOWL1250MLPET-checkbox"
+																class="inp-cbx item-checkbox" data-item="BOWL1250MLPET" />
+															<label class="cbx" for="BOWL1250MLPET-checkbox">
+																<span>
+																	<svg width="12px" height="10px" viewBox="0 0 12 10">
+																		<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+																	</svg>
+																</span>
+																TAMPA BOWL 1250 ml PET
+															</label>
+														</div>
+													</div>
+													<div class="col-4 col-sm-4">
+														<div class="row" style="padding-top: 20px;">Quantidade</div>
+														<div class="row" style="padding-top: 20px;">
+															<select id="BOWL1250MLPET-quantidade" class="form-select form-select-lg"><option value="selecione">Selecione</option> 
+																<option value="270">270</option>
+																<option value="540">540</option>
+																<option value="810">810</option>
+																<option value="1080">1.080</option>
+																<option value="1350">1.350</option>
+																<option value="1620">1.620</option>
+																<option value="1000000">ACIMA</option>
+															</select>
+														</div>
+													</div>
+												</div>											
+												
+											</div>
+											<!-- FIM DOS ITENS -->
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Final content Container -->
+							<div class="col-lg-4" id="sidebar">
+								<!-- Order Container -->
+								<div id="orderContainer" class="theiaStickySidebar">
+									<div class="row">
+										<div class="col-md-12">
+											<h3>Orçamento: <span id="numorc"></span></h3>											
+									<!-- Upload file Container -->	
+								<div id="upload-container">
+									<h4>Envie sua Arte</h4>
+									<input type="file" id="file-input" accept="application/pdf, image/jpeg, image/png" />
+									<button type="button"  id="upload-button" class="btn-form-func btn-form-func-alt-color">
+												<span class="btn-form-func-content">UPLOAD</span>
+												<span class="icon"><i class="fa fa-upload" aria-hidden="true"></i></span>
+									</button>
+									<input type="hidden" id="file-url" name="file-url" />
+								</div>
+								<hr >
+											<ul id="orderSumList"></ul>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-lg-12">
+											<button id="enviar" class="btn-form-func">
+												<span class="btn-form-func-content">ENVIAR</span>
+												<span class="icon"><i class="fa fa-check" aria-hidden="true"></i></span>
+											</button>
+											<div id="resultado"></div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-lg-12">
+											<button type="button" name="reset" id="resetBtn"
+												class="btn-form-func btn-form-func-alt-color"
+												onclick="limparFormulario()">
+												<span class="btn-form-func-content">RESET</span>
+												<span class="icon"><i class="fa fa-times" aria-hidden="true"></i></span>
+											</button>
+										</div>
+									</div>
+									<div class="row footer">
+										<div class="col-lg-12 text-center">
+											<small></small>
+										</div>
+									</div>
+								</div>
+								<!-- Order Container End -->
+							</div>
+						</div>
+					</form>
+					<!-- Form End -->
+				</div>
+			</div>
+			<!-- Order End -->
+		</main>
+		<!-- Main End -->
+
+		<!-- Footer -->
+		<footer class="main-footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3">
+						<h5 class="footer-heading">SOBRE</h5>
+						<ul class="list-unstyled nav-links">
+							<li><i class="fas fa-angle-right"></i> <a href="https://nazapack.com.br/quem-somos/"
+									class="footer-link">Quem Somos</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="https://nazapack.com.br/tecnologia/"
+									class="footer-link">Tecnologia</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="https://nazapack.com.br/diferenciais/"
+									class="footer-link">Diferenciais</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="https://nazapack.com.br/contato/"
+									class="footer-link">Contato</a></li>
+						</ul>
+					</div>
+					<div class="col-md-3">
+						<h5 class="footer-heading">SEGMENTOS</h5>
+						<ul class="list-unstyled nav-links">
+							<li><i class="fas fa-angle-right"></i> <a href="#" class="footer-link">Marketing</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="#" class="footer-link">Promocional</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="#" class="footer-link">Cafés</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="#" class="footer-link">Sorveteria</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="#" class="footer-link">Hamburgueria</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="#" class="footer-link">Padaria</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="#" class="footer-link">Corporativo</a></li>
+							<li><i class="fas fa-angle-right"></i> <a href="#" class="footer-link">Eventos</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<h5 class="footer-heading">ENDEREÇO</h5>
+						<ul class="list-unstyled contact-links">
+							<li><i class="icon icon-map-marker"></i><a href="https://goo.gl/maps/vKgGyZe2JSRLDnYH6"
+									class="footer-link" target="_blank">Rua das Municipalidades,
+									Nº 170, Ipiranga - SP</a>
+							</li>
+							<li><i class="icon icon-envelope3"></i><a href="mailto:info@yourdomain.com"
+									class="footer-link">comercial@nazapack.com.br</a></li>
+							<li><i class="icon icon-phone2"></i><a href="tel:+3630123456789" class="footer-link">+55
+									(11) 3580-0300</a></li>
+						</ul>
+					</div>
+					<div class="col-md-2">
+						<h5 class="footer-heading">Nos Siga!</h5>
+						<ul class="list-unstyled social-links">
+							<li><a href="https://facebook.com" class="social-link" target="_blank"><i
+										class="icon icon-facebook"></i></a></li>
+							<li><a href="https://instagram.com" class="social-link" target="_blank"><i
+										class="icon icon-instagram"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-md-12">
+						<div id="copy">Copyright © 202 Nazapack | Todos os direitos reservados | Desenvolvido por
+							ICARUS</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<!-- Footer End -->
+	</div>
+	<!-- Page End -->
+
+	<!-- Back to top button -->
+	<div id="toTop"><i class="fa fa-chevron-up"></i></div>
+
+	<!-- Vendor Javascript Files -->
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+		integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+		integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+		crossorigin="anonymous"></script>
+
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/easing/js/easing.min.js"></script>
+	<script src="vendor/parsley/js/parsley.min.js"></script>
+	<script src="vendor/nice-select/js/jquery.nice-select.min.js"></script>
+	<script src="vendor/theia-sticky-sidebar/js/ResizeSensor.min.js"></script>
+	<script src="vendor/theia-sticky-sidebar/js/theia-sticky-sidebar.min.js"></script>
+	<script src="vendor/mmenu/js/mmenu.min.js"></script>
+	<script src="vendor/float-labels/js/float-labels.min.js"></script>
+
+	<!-- JavaScript -->
+	<script>
+
+		// =====================================================
+		//      START FUNCTIONS
+		// =====================================================
+
+		function mostrarPFJ() {
+			var tipoPessoa = document.querySelector('input[name="tipoPessoa"]:checked').value;
+			var inputPessoaFisica = document.getElementById('tipopf');
+			var inputPessoaJuridica = document.getElementById('tipopj');
+
+			if (tipoPessoa === 'fisica') {
+				inputPessoaFisica.style.display = 'flex';
+				inputPessoaJuridica.style.display = 'none';
+			} else if (tipoPessoa === 'juridica') {
+				inputPessoaFisica.style.display = 'none';
+				inputPessoaJuridica.style.display = 'flex';
+			}
+		}
+
+		function colorCopos(event, option, buttonId) {
+			event.preventDefault();
+			// Esconde todos os inputs
+			document.querySelectorAll('.copos-group').forEach((element) => {
+				element.style.display = 'none';
+				// Seleciona todos os checkboxes dentro da div
+				const checkboxes = element.querySelectorAll('input[type="checkbox"]');
+
+				// Limpa os valores dos checkboxes
+				checkboxes.forEach((checkbox) => {
+					checkbox.checked = false;
+				});
+			});
+
+			// Remove a classe 'clicked' de todos os botões
+			var buttons = document.getElementsByClassName('btn-tipo');
+			for (var i = 0; i < buttons.length; i++) {
+				buttons[i].classList.remove('clicked');
+			}
+
+			document.getElementById(buttonId).classList.add('clicked');
+
+			// Mostra os inputs relacionados à opção escolhida
+			document.getElementById(option).style.display = 'block';
+		}
+
+
+		function colorPotes(event, option, buttonId) {
+			event.preventDefault();
+			document.querySelectorAll('.potes-group').forEach((element) => {
+				element.style.display = 'none';
+				const checkboxes = element.querySelectorAll('input[type="checkbox"]');
+				checkboxes.forEach((checkbox) => {
+					checkbox.checked = false;
+				});
+			});
+			var buttons = document.getElementsByClassName('btn-tipo');
+			for (var i = 0; i < buttons.length; i++) {
+				buttons[i].classList.remove('clicked');
+			}
+			document.getElementById(buttonId).classList.add('clicked');
+			document.getElementById(option).style.display = 'block';
+		}
+
+		function colorBowls(event, option, buttonId) {
+			event.preventDefault();
+			document.querySelectorAll('.bowls-group').forEach((element) => {
+				element.style.display = 'none';
+				const checkboxes = element.querySelectorAll('input[type="checkbox"]');
+				checkboxes.forEach((checkbox) => {
+					checkbox.checked = false;
+				});
+			});
+			var buttons = document.getElementsByClassName('btn-tipo');
+			for (var i = 0; i < buttons.length; i++) {
+				buttons[i].classList.remove('clicked');
+			}
+			document.getElementById(buttonId).classList.add('clicked');
+			document.getElementById(option).style.display = 'block';
+		}
+
+
+		function updateOptions(item) {
+			return function () {
+				const cup = document.getElementById("option" + item);
+				const cupOptions = document.getElementById(item + "-options");
+
+				if (!cup) {
+					console.error(`Elemento com ID "option${item}" não encontrado.`);
+					return;
+				}
+
+				if (!cupOptions) {
+					console.error(`Elemento com ID "${item}-options" não encontrado.`);
+					return;
+				}
+
+				if (cup.checked) {
+					cupOptions.style.display = "block";
+				} else {
+					cupOptions.style.display = "none";
+				}
+			}
+		}
+
+		document.getElementById("optionCup").addEventListener("change", updateOptions("Cup"));
+		document.getElementById("optionPot").addEventListener("change", updateOptions("Pot"));
+		document.getElementById("optionBowls").addEventListener("change", updateOptions("Bowls"));
+		document.getElementById("optionTampas").addEventListener("change", updateOptions("Tampas"));		
+		
+		function adicionaAcessorioResumo(item, quantidade, AcessorioId) {
+			const listItem = document.createElement('li');
+			listItem.textContent = `${item} - Quantidade: ${quantidade} und`;
+			listItem.dataset.itemId = AcessorioId;
+			resumoLista.appendChild(listItem);
+		}
+
+		function removeAcessorioResumo(AcessorioId) {
+			const listItem = resumoLista.querySelector(`li[data-item-id="${AcessorioId}"]`);
+			if (listItem) {
+				resumoLista.removeChild(listItem);
+			}
+		}
+
+		function atualizaAcessorioResumo(item, quantidade, AcessorioId) {
+			const listItem = resumoLista.querySelector(`li[data-item-id="${AcessorioId}"]`);
+			if (listItem) {
+				listItem.textContent = `${item} - Quantidade: ${quantidade} und`;
+			listItem.dataset.itemId = AcessorioId;
+			resumoLista.appendChild(listItem);
+
+			}
+		}		
+
+
+		const itens = document.querySelectorAll('.itens > div ');
+		const acessorios = document.querySelectorAll('.acessorios > div ');
+		const resumoLista = document.getElementById('orderSumList');
+		const enviarButton = document.getElementById('enviar');
+		const resultadoDiv = document.getElementById('orderContainer');
+
+		let itensSelecionados = [];
+
+
+		function adicionaItemResumo(item, quantidade, itemId, personalizado) {
+        if (quantidade === 'selecione' || quantidade === '') return; // Verifica se uma quantidade válida foi selecionada
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item} - Quantidade: ${quantidade} und`;
+        if (personalizado) {
+            listItem.textContent += ' - Personalizado';
+        }
+        listItem.dataset.itemId = itemId;
+        resumoLista.appendChild(listItem);
+    }
+
+    function removeItemResumo(itemId) {
+        const listItem = resumoLista.querySelector(`li[data-item-id="${itemId}"]`);
+        if (listItem) {
+            resumoLista.removeChild(listItem);
+        }
+    }
+
+    itens.forEach((item) => {
+        const checkbox = item.querySelector('input[type="checkbox"][id$="-checkbox"]');
+        const personalizadoCheckbox = item.querySelector('input[type="checkbox"][id$="-personalizado"]');
+        const select = item.querySelector('select');
+        const itemIdHidden = item.querySelector('input[type="hidden"][id$="-id"]');
+        const label = item.querySelector('label[for="' + checkbox.id + '"]');
+
+        checkbox.addEventListener('change', () => {
+            const itemId = personalizadoCheckbox.checked ? personalizadoCheckbox.value : itemIdHidden.value;
+            if (checkbox.checked) {
+                adicionaItemResumo(label.textContent.trim(), select.value, itemId, personalizadoCheckbox.checked);
+            } else {
+                removeItemResumo(itemId);
+                if (personalizadoCheckbox.checked) {
+                    adicionaItemResumo(label.textContent.trim(), select.value, itemIdHidden.value, false);
+                }
+            }
+        });
+
+		personalizadoCheckbox.addEventListener('change', () => {
+            const originalItemId = itemIdHidden.value;
+            const novoItemId = personalizadoCheckbox.value;
+            if (checkbox.checked) {
+                removeItemResumo(originalItemId); // Remove o item original ao clicar no checkbox de personalização
+                removeItemResumo(novoItemId); // Remove também o item personalizado, se já estiver na lista
+                if (personalizadoCheckbox.checked) {
+                    adicionaItemResumo(label.textContent.trim(), select.value, novoItemId, true);
+                } else {
+                    adicionaItemResumo(label.textContent.trim(), select.value, originalItemId, false);
+                }
+            }
+        });
+
+        select.addEventListener('change', () => {
+            const itemId = personalizadoCheckbox.checked ? personalizadoCheckbox.value : itemIdHidden.value;
+            if (checkbox.checked) {
+                removeItemResumo(itemId);
+                adicionaItemResumo(label.textContent.trim(), select.value, itemId, personalizadoCheckbox.checked);
+            }
+        });
+    });
+
+		acessorios.forEach((acessorios, index) => {
+			const checkbox = acessorios.querySelector('input[type="checkbox"][id$="-checkbox"]');
+			const select = acessorios.querySelector('select');
+			const AcessorioId = acessorios.querySelector('input[type="hidden"][id$="-id"]').value;
+			const label = acessorios.querySelector('label[for="' + checkbox.id + '"]');
+			checkbox.addEventListener('change', () => {
+				if (checkbox.checked) {
+					adicionaAcessorioResumo(label.textContent, select.value, AcessorioId);
+				} else {
+					removeAcessorioResumo(AcessorioId);
+				}
+			});
+			select.addEventListener('change', () => {
+				if (checkbox.checked) {
+					atualizaAcessorioResumo(label.textContent, select.value, AcessorioId);
+				}
+			});
+		});
+
+		const storeOriginalOptions = () => {
+			const selects = document.querySelectorAll('select');
+			selects.forEach(select => {
+				const options = Array.from(select.options).map(option => ({
+					value: option.value,
+					text: option.text
+				}));
+				select.dataset.originalOptions = JSON.stringify(options);
+			});
+		};
+
+		const restoreOriginalOptions = select => {
+			const options = JSON.parse(select.dataset.originalOptions);
+			select.innerHTML = '';
+			options.forEach(option => {
+				const opt = document.createElement('option');
+				opt.value = option.value;
+				opt.textContent = option.text;
+				select.appendChild(opt);
+			});
+		};
+
+			document.getElementById('mostrarTampasBtn').addEventListener('click', function () {
+				event.preventDefault();
+            document.querySelectorAll('.item-tampa').forEach(tampa => {
+                tampa.classList.add('hidden');
+            });
+
+            document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+                if (checkbox.checked) {
+                    const selectedItem = checkbox.getAttribute('data-item');
+                    document.querySelectorAll('.item-tampa').forEach(tampa => {
+                        if (tampa.getAttribute('data-item') === selectedItem) {
+                            tampa.classList.remove('hidden');
+                        }
+                    });
+                }
+            });
+        });
+
+        document.getElementById('mostrarTodasTampasBtn').addEventListener('click', function () {
+			event.preventDefault();
+            document.querySelectorAll('.item-tampa').forEach(tampa => {
+                tampa.classList.remove('hidden');
+            });
+        });
+
+        document.getElementById('mostrarTodasTampasBtn').addEventListener('click', function () {
+            document.querySelectorAll('.item-tampa').forEach(tampa => {
+                tampa.classList.remove('hidden');
+            });
+        });
+
+		document.addEventListener('DOMContentLoaded', () => {
+			storeOriginalOptions();
+
+			document.querySelectorAll('.personalizarProd').forEach(checkbox => {
+				checkbox.addEventListener('change', function () {
+					const itemId = this.id.split('-')[0];
+					const select = document.getElementById(`${itemId}-quantidade`);
+					const targetId = checkbox.dataset.target;
+					const divUploadFile = document.getElementById('upload-container');
+						
+					if (this.checked) {
+						divUploadFile.style.display = 'block';
+						if (itemId === 'item1' || itemId === 'item12' || itemId === 'PT50' || itemId === 'PTK50') {
+							select.innerHTML = `
+								<option value="selecione">Selecione</option>                                
+                                <option value="10000">10.000</option>
+                                <option value="20000">20.000</option>								
+                                <option value="30000">30.000</option>																
+                                <option value="40000">40.000</option>																								
+                                <option value="50000">50.000</option>
+								<option value="60000">60.000</option>								
+                                <option value="1000000">ACIMA</option>
+                            `;
+							const div = document.getElementById('meuDiv');
+						} else {
+							select.innerHTML = `
+								<option value="selecione">Selecione</option>  
+								<option value="6000">6.000</option>
+                                <option value="10000">10.000</option>
+                                <option value="15000">15.000</option>
+                                <option value="20000">20.000</option>								
+                                <option value="30000">30.000</option>
+								<option value="30000">50.000</option>																
+                                <option value="1000000">ACIMA</option>
+                            `;
+						}
+					} else {
+						restoreOriginalOptions(select);
+					}
+				});
+			});
+		});
+		
+// Upload image
+
+document.getElementById('upload-button').addEventListener('click', function() {
+	const fileInput = document.getElementById('file-input');
+	const file = fileInput.files[0];
+
+	if (!file) {
+		alert('Por favor selecione arquivo');
+		return;
+	}
+
+	const formData = new FormData();
+	formData.append('file', file);
+
+	fetch('php/upload.php', {
+		method: 'POST',
+		body: formData
+	})
+	.then(response => response.json())
+	.then(data => {
+                const fileUrlInput = document.getElementById('file-url');
+                fileUrlInput.value = data.fileUrl;
+            })
+	.catch(error => {
+		console.error('Error uploading file:', error);
+	});
+});
+
+	</script>
+
+	<!-- Main Javascript File -->
+	<script src="js/scripts.js"></script>
+	
+	<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N95HL6ZB"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+</body>
+
+</html>
